@@ -2,7 +2,7 @@
 // Created by Segev on 24/05/2023.
 //
 
-#include "MagicalContainer.h"
+#include "MagicalContainer.hpp"
 
 MagicalContainer::MagicalContainer() {
 }
@@ -23,6 +23,7 @@ MagicalContainer &MagicalContainer::operator=(const MagicalContainer &other) {
 
 void MagicalContainer::addElement(int element) {
     dArray.push_back(element);
+    sort(dArray.begin(), dArray.end());
 }
 
 void MagicalContainer::removeElement(int element) {
@@ -41,10 +42,11 @@ int MagicalContainer::size() const {
 
 //AscendingIterator
 
-AscendingIterator::AscendingIterator(const MagicalContainer &cont, int curr)
-        : cont(cont), curr(curr) {}
+MagicalContainer::AscendingIterator::AscendingIterator(const MagicalContainer &cont, int curr)
+        : cont(cont), curr(curr) {
+}
 
-AscendingIterator::AscendingIterator(const AscendingIterator &other)
+MagicalContainer::AscendingIterator::AscendingIterator(const AscendingIterator &other)
         : cont(other.cont), curr(other.curr) {}
 
 //AscendingIterator &AscendingIterator::operator=(const AscendingIterator &other) {
@@ -55,36 +57,36 @@ AscendingIterator::AscendingIterator(const AscendingIterator &other)
 //    return *this;
 //}
 
-AscendingIterator AscendingIterator::begin() const {
-    return AscendingIterator(cont, 0);
+MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::begin() const {
+    return MagicalContainer::AscendingIterator(cont, 0);
 }
 
-AscendingIterator AscendingIterator::end() const {
+MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() const {
     return AscendingIterator(cont, cont.size());
 }
 
 
-bool AscendingIterator::operator==(const AscendingIterator &other) const {
+bool MagicalContainer::AscendingIterator::operator==(const AscendingIterator &other) const {
     return curr == other.curr;
 }
 
-bool AscendingIterator::operator!=(const AscendingIterator &other) const {
+bool MagicalContainer::AscendingIterator::operator!=(const AscendingIterator &other) const {
     return !(*this == other);
 }
 
-bool AscendingIterator::operator>(const AscendingIterator &other) const {
+bool MagicalContainer::AscendingIterator::operator>(const AscendingIterator &other) const {
     return curr > other.curr;
 }
 
-bool AscendingIterator::operator<(const AscendingIterator &other) const {
+bool MagicalContainer::AscendingIterator::operator<(const AscendingIterator &other) const {
     return curr < other.curr;
 }
 
-int AscendingIterator::operator*() const {
+int MagicalContainer::AscendingIterator::operator*() const {
     return cont.dArray[(std::vector<int>::size_type) curr];
 }
 
-AscendingIterator &AscendingIterator::operator++() {
+MagicalContainer::AscendingIterator &MagicalContainer::AscendingIterator::operator++() {
     ++curr;
     return *this;
 }
@@ -92,44 +94,56 @@ AscendingIterator &AscendingIterator::operator++() {
 
 //SideCrossIterator
 
-SideCrossIterator::SideCrossIterator(const MagicalContainer &cont, int curr)
-        : cont(cont), curr(curr) {}
+MagicalContainer::SideCrossIterator::SideCrossIterator(const MagicalContainer &cont, int forward, int backward)
+        : cont(cont), forward(forward), backward(backward) {}
 
-SideCrossIterator::SideCrossIterator(const SideCrossIterator &other)
-        : cont(other.cont), curr(other.curr) {}
+MagicalContainer::SideCrossIterator::SideCrossIterator(const SideCrossIterator &other)
+        : cont(other.cont), forward(other.forward), backward(other.backward) {}
 
 
-SideCrossIterator SideCrossIterator::begin() const {
-    return SideCrossIterator(cont, 0);
+MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::begin() const {
+    return SideCrossIterator(cont, 0, cont.size());
 }
 
-SideCrossIterator SideCrossIterator::end() const {
-    return SideCrossIterator(cont, cont.size());
+MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() const {
+    int s = cont.size() / 2;
+    if (cont.size() % 2 == 0) {
+        return SideCrossIterator(cont, cont.size(), 0);
+    }
+    return SideCrossIterator(cont, s, s);
 }
 
 
-bool SideCrossIterator::operator==(const SideCrossIterator &other) const {
-    return curr == other.curr;
+bool MagicalContainer::SideCrossIterator::operator==(const SideCrossIterator &other) const {
+    return forward == other.forward && backward == other.backward;
 }
 
-bool SideCrossIterator::operator!=(const SideCrossIterator &other) const {
+bool MagicalContainer::SideCrossIterator::operator!=(const SideCrossIterator &other) const {
     return !(*this == other);
 }
 
-bool SideCrossIterator::operator>(const SideCrossIterator &other) const {
-    return curr > other.curr;
+bool MagicalContainer::SideCrossIterator::operator>(const SideCrossIterator &other) const {
+    return forward > other.forward && backward > other.backward;
 }
 
-bool SideCrossIterator::operator<(const SideCrossIterator &other) const {
-    return curr < other.curr;
+bool MagicalContainer::SideCrossIterator::operator<(const SideCrossIterator &other) const {
+    return forward < other.forward && backward < other.backward;
 }
 
-int SideCrossIterator::operator*() const {
-    return cont.dArray[(std::vector<int>::size_type) curr];
+int MagicalContainer::SideCrossIterator::operator*() {
+    if (isForward) {
+        isForward = false;
+        return cont.dArray[(std::vector<int>::size_type) forward];
+    }
+    isForward = true;
+    return cont.dArray[(std::vector<int>::size_type) backward];
 }
 
-SideCrossIterator &SideCrossIterator::operator++() {
-    ++curr;
+MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operator++() {
+    if (isForward)
+        ++forward;
+    else
+        --backward;
     return *this;
 }
 
@@ -137,43 +151,68 @@ SideCrossIterator &SideCrossIterator::operator++() {
 
 //PrimeIterator
 
-PrimeIterator::PrimeIterator(const MagicalContainer &cont, int curr)
-        : cont(cont), curr(curr) {}
+MagicalContainer::PrimeIterator::PrimeIterator(const MagicalContainer &cont, int curr)
+        : cont(cont), curr(curr) {
+    while (this->curr < this->cont.size()) {
+        if (isPrime(this->cont.dArray[(std::vector<int>::size_type) this->curr])) {
+            break;
+        }
+        ++this->curr;
+    }
+}
 
-PrimeIterator::PrimeIterator(const PrimeIterator &other)
+MagicalContainer::PrimeIterator::PrimeIterator(const PrimeIterator &other)
         : cont(other.cont), curr(other.curr) {}
 
 
-PrimeIterator PrimeIterator::begin() const {
+bool MagicalContainer::PrimeIterator::isPrime(int num) {
+    if (num <= 1) {
+        return false;
+    }
+    for (int i = 2; i <= sqrt(num); ++i) {
+        if (num % i == 0)
+            return false;
+    }
+    return true;
+}
+
+MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::begin() const {
     return PrimeIterator(cont, 0);
 }
 
-PrimeIterator PrimeIterator::end() const {
+MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() const {
     return PrimeIterator(cont, cont.size());
 }
 
 
-bool PrimeIterator::operator==(const PrimeIterator &other) const {
+bool MagicalContainer::PrimeIterator::operator==(const PrimeIterator &other) const {
     return curr == other.curr;
 }
 
-bool PrimeIterator::operator!=(const PrimeIterator &other) const {
+bool MagicalContainer::PrimeIterator::operator!=(const PrimeIterator &other) const {
     return !(*this == other);
 }
 
-bool PrimeIterator::operator>(const PrimeIterator &other) const {
+bool MagicalContainer::PrimeIterator::operator>(const PrimeIterator &other) const {
     return curr > other.curr;
 }
 
-bool PrimeIterator::operator<(const PrimeIterator &other) const {
+bool MagicalContainer::PrimeIterator::operator<(const PrimeIterator &other) const {
     return curr < other.curr;
 }
 
-int PrimeIterator::operator*() const {
+int MagicalContainer::PrimeIterator::operator*() const {
     return cont.dArray[(std::vector<int>::size_type) curr];
 }
 
-PrimeIterator &PrimeIterator::operator++() {
+MagicalContainer::PrimeIterator &MagicalContainer::PrimeIterator::operator++() {
     ++curr;
+    while (curr < cont.size()) {
+        if (isPrime(cont.dArray[(std::vector<int>::size_type) curr])) {
+            break;
+        }
+        ++curr;
+    }
     return *this;
 }
+
