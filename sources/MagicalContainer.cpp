@@ -49,13 +49,7 @@ MagicalContainer::AscendingIterator::AscendingIterator(const MagicalContainer &c
 MagicalContainer::AscendingIterator::AscendingIterator(const AscendingIterator &other)
         : cont(other.cont), curr(other.curr) {}
 
-//AscendingIterator &AscendingIterator::operator=(const AscendingIterator &other) {
-//    if (this != &other) {
-//        cont = other.cont;
-//        curr = other.curr;
-//    }
-//    return *this;
-//}
+
 
 MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::begin() const {
     return MagicalContainer::AscendingIterator(cont, 0);
@@ -65,6 +59,13 @@ MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() c
     return AscendingIterator(cont, cont.size());
 }
 
+MagicalContainer::AscendingIterator &MagicalContainer::AscendingIterator::operator=(const AscendingIterator &other) {
+    if (this != &other) {
+//        cont = other.cont;
+        curr = other.curr;
+    }
+    return *this;
+}
 
 bool MagicalContainer::AscendingIterator::operator==(const AscendingIterator &other) const {
     return curr == other.curr;
@@ -111,6 +112,16 @@ MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() c
         return SideCrossIterator(cont, cont.size(), 0);
     }
     return SideCrossIterator(cont, s, s);
+}
+
+MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operator=(const SideCrossIterator &other) {
+    if (this != &other) {
+//        cont = other.cont;
+        forward = other.forward;
+        backward = other.backward;
+        isForward = other.isForward;
+    }
+    return *this;
 }
 
 
@@ -184,6 +195,13 @@ MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() const {
     return PrimeIterator(cont, cont.size());
 }
 
+MagicalContainer::PrimeIterator &MagicalContainer::PrimeIterator::operator=(const PrimeIterator &other) {
+    if (this != &other) {
+//        cont = other.cont;
+        curr = other.curr;
+    }
+    return *this;
+}
 
 bool MagicalContainer::PrimeIterator::operator==(const PrimeIterator &other) const {
     return curr == other.curr;

@@ -7,15 +7,12 @@
 
 #include <vector>
 #include <iostream>
-#include <stdio.h>
 #include <cmath>
 #include <algorithm>
 
 namespace ariel {}
 using namespace std;
 
-
-class AscendingIterator;
 
 class MagicalContainer {
 private:
@@ -44,11 +41,11 @@ public:
 
         AscendingIterator(const AscendingIterator &other);
 
-//    AscendingIterator &operator=(const AscendingIterator &other);
 
         AscendingIterator begin() const;
         AscendingIterator end() const;
 
+        AscendingIterator &operator=(const AscendingIterator &other);
         bool operator==(const AscendingIterator &other) const;
         bool operator!=(const AscendingIterator &other) const;
         bool operator>(const AscendingIterator &other) const;
@@ -75,6 +72,7 @@ public:
         SideCrossIterator begin() const;
         SideCrossIterator end() const;
 
+        SideCrossIterator &operator=(const SideCrossIterator &other);
         bool operator==(const SideCrossIterator &other) const;
         bool operator!=(const SideCrossIterator &other) const;
         bool operator>(const SideCrossIterator &other) const;
@@ -97,6 +95,7 @@ public:
         PrimeIterator begin() const;
         PrimeIterator end() const;
 
+        PrimeIterator &operator=(const PrimeIterator &other);
         bool operator==(const PrimeIterator &other) const;
         bool operator!=(const PrimeIterator &other) const;
         bool operator>(const PrimeIterator &other) const;
